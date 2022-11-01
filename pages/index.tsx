@@ -4,8 +4,13 @@ import Image from "next/image";
 import Header from "../components/Header";
 import Landing from "../components/Landing";
 import { Tab } from '@headlessui/react';
+import { fetchCategories } from "../utils/fetchCategories";
 
-const Home: NextPage = () => {
+interface Props {
+  categories: Category[]
+}
+
+const Home = ({ categories }: Props) => {
   return (
     <div className="">
       <Head>
@@ -26,7 +31,7 @@ const Home: NextPage = () => {
 
           <Tab.Group>
             <Tab.List className="flex justify-center">
-              {/* {categories.map((category) => (
+              {categories.map((category) => (
                 <Tab
                   key={category._id}
                   id={category._id}
@@ -40,7 +45,7 @@ const Home: NextPage = () => {
                 >
                   {category.title}
                 </Tab>
-              ))} */}
+              ))}
             </Tab.List>
             <Tab.Panels className="mx-auto max-w-fit pt-10 pb-24 sm:px-4">
               {/* <Tab.Panel className="tabPanel">{showProducts(0)}</Tab.Panel>
@@ -60,9 +65,11 @@ export default Home;
 
 //Backend -> serverside rendering -> only with Next.js
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  // const categories = await fetchCategories()
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const categories = await fetchCategories() //utils!
   return {
-    props: {},
+    props: {
+      categories,
+    },
   }
 }
