@@ -10,16 +10,16 @@ interface Props {
 function Product({ product }: Props) {
   return (
     <div className="flex h-fit w-[320px] select-none flex-col space-y-3 rounded-xl bg-[#35383C] p-8 md:h-[500px] md:w-[400px] md:p-10">
-      <div className="relative h-64 w-full md:h-72">
-        <Image
-          alt=""
-          src={urlFor(product.image[0]).url()}
-          width={1000}
-          height={1000}
-          //   layout="fill"
-          //   objectFit="contain"
-        />
-      </div>
+     <div className="relative h-64 w-full md:h-72 text-center">
+      <Image
+        src={urlFor(product.image[0]).url()}
+        alt={product.title}
+        // layout="fill"
+        // objectFit="contain"
+        width={250}
+        height={200}
+      />
+    </div>
 
       <div className="flex flex-1 items-center justify-between space-x-3">
         <div className="space-y-2 text-xl text-white md:text-2xl">
