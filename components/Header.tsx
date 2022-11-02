@@ -6,8 +6,11 @@ import {
   ShoppingBagIcon,
   UserIcon,
 } from "@heroicons/react/outline";
+import { useSelector } from "react-redux";
+import { selectBasketItems } from "../state/basket";
 
 const Header = () => {
+  const items = useSelector(selectBasketItems);
   const session = false;
 
   return (
@@ -36,9 +39,11 @@ const Header = () => {
         <SearchIcon className="headerIcon" />
         <Link href="/checkout">
           <div className="relative cursor-pointer ">
-          <span className="absolute -right-1 -top-1 z-50 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-[10px] text-white">
-              5
-            </span>
+            {items.length > 0 && (
+              <span className="absolute -right-1 -top-1 z-50 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-[10px] text-white">
+                {items.length}
+              </span>
+            )}
             <ShoppingBagIcon className="headerIcon" />
           </div>
         </Link>

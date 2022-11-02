@@ -24,10 +24,10 @@ const Landing = () => {
         <Image
           src="/iphone13.png"
           alt=""
-          //   layout="fill"
-          //   objectFit="contain"
-          width={1000}
-          height={1000}
+          // layout="fill"
+          // objectFit="contain"
+          width={600}
+          height={600}
         />
       </div>
     </section>

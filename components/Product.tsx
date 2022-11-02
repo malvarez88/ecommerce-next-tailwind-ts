@@ -1,25 +1,36 @@
+import { useDispatch } from "react-redux";
 import { ShoppingCartIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import React from "react";
 import { urlFor } from "../sanity";
+import { addToBasket } from "../state/basket";
+import toast from "react-hot-toast";
 
 interface Props {
   product: Product;
 }
 
 function Product({ product }: Props) {
+  const dispatch = useDispatch();
+  const addItemToBasket = () => {
+    dispatch(addToBasket(product));
+    toast.success(`${product.title} added to the basket`, {
+      position: "top-center",
+    });
+  };
+
   return (
     <div className="flex h-fit w-[320px] select-none flex-col space-y-3 rounded-xl bg-[#35383C] p-8 md:h-[500px] md:w-[400px] md:p-10">
-     <div className="relative h-64 w-full md:h-72 text-center">
-      <Image
-        src={urlFor(product.image[0]).url()}
-        alt={product.title}
-        // layout="fill"
-        // objectFit="contain"
-        width={250}
-        height={200}
-      />
-    </div>
+      <div className="relative h-64 w-full text-center md:h-72 items-center justify-center">
+        <Image
+          src={urlFor(product.image[0]).url()}
+          alt={product.title}
+          // layout="fill"
+          // objectFit="contain"
+          width={220}
+          height={200}
+        />
+      </div>
 
       <div className="flex flex-1 items-center justify-between space-x-3">
         <div className="space-y-2 text-xl text-white md:text-2xl">
@@ -28,8 +39,8 @@ function Product({ product }: Props) {
         </div>
 
         <div
-          className="flex h-16 w-16 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-violet-500 md:h-[70px] md:w-[70px]"
-          //   onClick={addItemToBasket}
+          className="flex h-16 w-16 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-violet-500 md:h-[70px] md:w-[70px]"
+          onClick={addItemToBasket}
         >
           <ShoppingCartIcon className="h-8 w-8 text-white" />
         </div>
