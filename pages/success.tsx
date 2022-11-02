@@ -14,6 +14,7 @@ import { useMediaQuery } from "react-responsive";
 import Currency from "react-currency-formatter";
 import { GetServerSideProps } from "next";
 import { fetchLineItems } from "../utils/fetchLineItems";
+import { useSession } from "next-auth/react";
 
 interface Props {
   products: StripeProduct[];
@@ -26,6 +27,7 @@ const Success = ({ products }: Props) => {
   const { session_id } = router.query;
   const [mounted, seteMounted] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
+  const { data: session } = useSession();
   const subtotal = products.reduce(
     (acc, product) => acc + product.price.unit_amount / 100,
     0
@@ -51,7 +53,7 @@ const Success = ({ products }: Props) => {
       </Head>
       <header className="mx-auto max-w-xl">
         <Link href="/">
-          <div className="relative ml-4 h-16 w-8 cursor-pointer transition lg:hidden">
+          <div className="relative ml-4 mt-4 h-16 w-8 cursor-pointer transition lg:hidden">
             <Image
               alt=""
               width={100}
@@ -89,7 +91,7 @@ const Success = ({ products }: Props) => {
               </p>
               <h4 className="text-lg">
                 Thank you{" "}
-                {/* {session ? session.user?.name?.split(" ")[0] : "Guest"} */}
+                {session ? session.user?.name?.split(" ")[0] : "Guest"}
               </h4>
             </div>
           </div>

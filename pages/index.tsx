@@ -1,8 +1,4 @@
-import type {
-  GetServerSideProps,
-  GetServerSidePropsResult,
-  NextPage,
-} from "next";
+import type { GetServerSideProps } from "next";
 import { Tab } from "@headlessui/react";
 import Head from "next/head";
 import Image from "next/image";
@@ -12,17 +8,21 @@ import Product from "../components/Product";
 import { fetchCategories } from "../utils/fetchCategories";
 import { fetchProducts } from "../utils/fetchProducts";
 import Basket from "../components/Basket";
+import { getSession } from "next-auth/react";
+import type { Session } from "next-auth";
 
 interface Props {
   categories: Category[];
   products: Product[];
+  session: Session | null;
 }
 
 const Home = ({ categories, products }: Props) => {
   const showProducts = (category: number) => {
-    return products.filter((product) => product.category?._ref === categories[category]._id).map((product) => <Product product={product} key={product._id} />); 
+    return products
+      .filter((product) => product.category?._ref === categories[category]._id)
+      .map((product) => <Product product={product} key={product._id} />);
     // filter products by category
-   
   };
 
   return (
@@ -62,7 +62,7 @@ const Home = ({ categories, products }: Props) => {
                   {category.title}
                 </Tab>
               ))}
-              </Tab.List>
+            </Tab.List>
             <Tab.Panels className="mx-auto max-w-fit pt-10 pb-24 sm:px-4">
               <Tab.Panel className="tabPanel">{showProducts(0)}</Tab.Panel>
               <Tab.Panel className="tabPanel">{showProducts(1)}</Tab.Panel>
@@ -80,13 +80,18 @@ export default Home;
 
 //Backend -> serverside rendering -> only with Next.js
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   const categories = await fetchCategories(); //utils!
   const products = await fetchProducts(); //utils!
+  const session = await getSession(context); //next auth hook that accept a context
+
   return {
     props: {
       categories,
       products,
+      session,
     },
   };
 };
