@@ -7,7 +7,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-08-01",
 });
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     const items: Product[] = req.body.items;
 
@@ -18,9 +21,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         currency: "usd",
         product_data: {
           name: item.title,
-          image: [urlFor(item.image[0]).url()],
+          images: [urlFor(item.image[0]).url()],
         },
-        unity_amount: item.price * 100,
+        unit_amount: item.price * 100,
       },
       quantity: 1,
     }));
@@ -39,6 +42,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           images: JSON.stringify(items.map((item) => item.image[0].asset.url)),
         },
       };
-    } catch (error) {}
+      const checkoutSession: Stripe.Checkout.Session =
+        await stripe.checkout.sessions.create(params);
+
+      res.status(200).json(checkoutSession);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Internal server error";
+      res.status(500).json({ statusCode: 500, message: errorMessage });
+    }
+  } else {
+      //https://stripe.com/docs/checkout/quickstart?client=next
+    res.setHeader("Allow", "POST");
+    res.status(405).end("Method Not Allowed");
   }
 }

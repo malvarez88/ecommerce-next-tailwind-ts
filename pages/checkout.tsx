@@ -44,11 +44,11 @@ const Checkout = () => {
     }
     //stripe instance. getStripe checks if there is already an instance of stripe, if there is not, it initialize it.
     const stripe = await getStripe();
-    const { error } = await stripe?.redirectToCheckout({
-      sessionId: checkoutSession.id,
+    const { error } = await stripe!.redirectToCheckout({
       // Make the id field from the Checkout Session creation API response
       // available to this file, so you can provide it as parameter here
       // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+      sessionId: checkoutSession.id,
     });
 
     // If `redirectToCheckout` fails due to a browser or network
