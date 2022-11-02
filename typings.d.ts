@@ -1,42 +1,58 @@
 interface Category {
-    _id: string;
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    _type: "category";
-    slug: {
-        _type: "slug";
-        current: string;
-    };
-    title: string;
+  _id: string;
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  _type: "category";
+  slug: {
+    _type: "slug";
+    current: string;
+  };
+  title: string;
 }
 
 interface Image {
-    _key: string;
-    _type: "image";
-    asset: {
-        url: string;
-    };
+  _key: string;
+  _type: "image";
+  asset: {
+    url: string;
+  };
 }
 
 interface Product {
-    _id: string;
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    _type: "product";
-    title: string;
-    price: number;
-    slug: {
-        _type: "slug";
-        current: string;
-    };
-    description: string;
-    category: {
-        _type: "reference";
-        _ref: string;
-    };
-    image: Image[];
+  _id: string;
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  _type: "product";
+  title: string;
+  price: number;
+  slug: {
+    _type: "slug";
+    current: string;
+  };
+  description: string;
+  category: {
+    _type: "reference";
+    _ref: string;
+  };
+  image: Image[];
+}
+
+//console.log(products from stripe)
+interface StripeProduct {
+  id: string;
+  amount_discount: number;
+  amount_subtotal: number;
+  amount_tax: number;
+  amount_total: number;
+  currency: string;
+  description: string;
+  object: string;
+  quantity: string;
+  price: {
+    unit_amount: number;
+  };
 }
 
 //all theese filds with underscores we will not see it in sanity, only when we fetch the categories.
