@@ -12,6 +12,7 @@
     "@reduxjs/toolkit": "^1.8.6",
     "@sanity/image-url": "^1.0.1",
     "@stripe/stripe-js": "^1.35.0",
+    "@types/react-currency-formatter": "^1.1.4",
     "next": "latest",
     "next-auth": "^4.10.3",
     "next-auth-sanity": "^1.4.4",
