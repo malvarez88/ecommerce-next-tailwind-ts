@@ -8,11 +8,15 @@ import CheckoutProduct from "../components/CheckoutProduct";
 import Header from "../components/Header";
 import { selectBasketItems, selectBasketTotal } from "../state/basket";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import { Stripe } from "stripe";
+import { fetchPostJSON } from "../utils/apiHelpers";
+import getStripe from "../utils/getStripe";
 
 const Checkout = () => {
   const items = useSelector(selectBasketItems);
   const basketTotal = useSelector(selectBasketTotal);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [itemsInBasket, setItemsInBasket] = useState(
     {} as { [key: string]: Product[] }
   );
@@ -24,6 +28,36 @@ const Checkout = () => {
     }, {} as { [key: string]: Product[] });
     setItemsInBasket(groupedItems);
   }, [items]);
+
+  const createCheckout = async () => {
+    setLoading(true);
+    const checkoutSession: Stripe.Checkout.Session = await fetchPostJSON(
+      "/api/checkout_session",
+      {
+        items: items,
+      }
+    );
+    //if there is an internal server error this is going to happen
+    if ((checkoutSession as any).statusCode === 500) {
+      console.error((checkoutSession as any).message);
+      return;
+    }
+    //stripe instance. getStripe checks if there is already an instance of stripe, if there is not, it initialize it.
+    const stripe = await getStripe();
+    const { error } = await stripe?.redirectToCheckout({
+      sessionId: checkoutSession.id,
+      // Make the id field from the Checkout Session creation API response
+      // available to this file, so you can provide it as parameter here
+      // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+    });
+
+    // If `redirectToCheckout` fails due to a browser or network
+    // error, display the localized error message to your customer
+    // using `error.message`.
+    console.warn(error.message);
+
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#e7ecee]">
@@ -91,10 +125,30 @@ const Checkout = () => {
                       <span>Pay Monthly </span>
                       <span>with Apple Card </span>
                       <span>
-                        $ {Math.round(basketTotal / 36)}/mo. at 0% APR
+                        $ {Math.round(basketTotal / 36)}.00/mo. at 0% APR
                         <sup className="-top-1"> ~</sup>
                       </span>
                     </h4>
+                    <Button title="Check Out with Apple Card Monthly Installments" />
+                    <p className="mt-2 max-w-[240px] text-[13px]">
+                      $0.00 due today, wich includes applicable full-price
+                      items, down payments, shipping, and taxes.
+                    </p>
+                  </div>
+                  <div className="flex flex-1 flex-col items-center rounded-xl bg-gray-200 p-8 py-12 text-center md:order-2">
+                    <h4 className="mb-4 flex flex-col text-xl font-semibold">
+                      Pay in full
+                      <span>
+                        <Currency quantity={basketTotal} currency="USD" />
+                      </span>
+                    </h4>
+                    <Button
+                      noIcon
+                      loading={loading}
+                      title="Check Out"
+                      width="w-full"
+                      onClick={createCheckout}
+                    />
                   </div>
                 </div>
               </div>
