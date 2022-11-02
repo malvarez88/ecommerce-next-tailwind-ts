@@ -11,16 +11,38 @@ interface Category {
     title: string;
 }
 
+interface Image {
+    _key: string;
+    _type: "image";
+    asset: {
+        url: string;
+    };
+}
+
+interface Product {
+    _id: string;
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    _type: "product";
+    title: string;
+    price: number;
+    slug: {
+        _type: "slug";
+        current: string;
+    };
+    description: string;
+    category: {
+        _type: "reference";
+        _ref: string;
+    };
+    image: Image[];
+}
+
 //all theese filds with underscores we will not see it in sanity, only when we fetch the categories.
 //there is no need to export this because next just get it. Good for yoy and for me Next =)
 
-
-// 1
-// {
-// 2
-  
-// 3
-// }
+//this is how its send fron sanity
 // "result":[4 items
 // 0:{3 items
 // "_id":"491e5bce-0e2f-43bf-9921-67c0f0c98692"
