@@ -20,7 +20,7 @@ const Landing = () => {
         </div>
       </div>
 
-      <div className="relative hidden h-[450px] w-[450px] transition-all duration-500 md:inline lg:h-[650px] lg:w-[600px]">
+      <div className="relative hidden h-[400px] w-[500px] transition-all duration-500 md:inline lg:h-[500px] lg:w-[500px]">
         <Image
           src="/iphone13.png"
           alt=""

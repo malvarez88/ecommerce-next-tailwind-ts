@@ -27,8 +27,8 @@ function Product({ product }: Props) {
           alt={product.title}
           // layout="fill"
           // objectFit="contain"
-          width={220}
-          height={200}
+          width={200}
+          height={100}
         />
       </div>
 

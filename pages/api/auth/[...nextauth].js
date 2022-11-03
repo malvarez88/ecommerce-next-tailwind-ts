@@ -1,7 +1,12 @@
 //https://next-auth.js.org/getting-started/example
 
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+
+
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { SanityAdapter } from "next-auth-sanity";
+import { sanityClient } from "../../../sanity";
+
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
@@ -11,5 +16,12 @@ export const authOptions = {
     }),
     // ...add more providers here
   ],
-}
-export default NextAuth(authOptions)
+  session: {
+    strategy: "jwt",
+  },
+  //https://www.sanity.io/plugins/next-auth-sanity
+  secret: process.env.NEXTAUTH_SECRET,
+  adapter: SanityAdapter(sanityClient),
+};
+
+export default NextAuth(authOptions);
